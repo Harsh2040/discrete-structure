@@ -1,0 +1,136 @@
+#include <iostream>
+#include <map>
+#include <cmath>
+using namespace std;
+void straightline (int a1,int b1,int a2,int b2,float slope)
+{
+	if (slope < 0)
+	{
+	int dx = a2-a1;
+	int dy = b2-b1;
+	
+	int i=0;
+
+	float decision_para = 2*(dy)-(dx);
+    map<int,int> m;
+	m.insert(make_pair(a1,b1));
+for (int i=min(a1,a2);i!= max(a1,a2);i++)
+{
+	if (decision_para < 0)
+	{
+		m.insert(make_pair(i+1,b1));
+		decision_para = decision_para + 2*(dy);
+		
+	}
+	else
+	{
+		--b1;
+		m.insert(make_pair(i-1,b1));
+	    decision_para = decision_para + 2*(dy-dx);	
+	
+	}
+}
+
+if (abs(slope) <=1)
+{
+map<int,int> :: iterator  itr;
+
+for (itr = m.begin();itr != m.end();++itr)
+{
+	cout <<"("<< itr->first << " " << itr->second << endl;
+}
+
+	
+}
+
+else
+{
+	map<int,int> :: iterator  itr;
+
+for (itr = m.begin();itr != m.end();++itr)
+{
+	cout <<"("<< -itr->second <<","<< -itr->first<<")"<< endl;
+}
+
+}
+
+
+	
+	
+	}
+	else
+	{
+	
+	int dx = a2-a1;
+	int dy = b2-b1;
+	
+	int i=0;
+
+	float decision_para = 2*(dy)-(dx);
+    map<int,int> m;
+	m.insert(make_pair(a1,b1));
+for (int i=min(a1,a2);i!= max(a2,a1);i++)
+{
+	if (decision_para < 0)
+	{
+		m.insert(make_pair(i+1,b1));
+		decision_para = decision_para + 2*(dy);
+		
+	}
+	else
+	{
+		++b1;
+		m.insert(make_pair(i+1,b1));
+	    decision_para = decision_para + 2*(dy-dx);	
+	
+	}
+}
+
+if (abs(slope) <=1)
+{
+map<int,int> :: iterator  itr;
+
+for (itr = m.begin();itr != m.end();++itr)
+{
+	cout <<"("<< itr->first << "," << itr->second <<")"<< endl;
+}
+
+	
+}
+
+else
+{
+	map<int,int> :: iterator  itr;
+
+for (itr = m.begin();itr != m.end();++itr)
+{
+	cout <<"("<< itr->second <<","<< itr->first<<")"<< endl;
+}
+
+}
+}
+
+	
+}
+
+int main()
+ {
+ 
+     int x1,y1;
+     int x2,y2;
+     cin >> x1 >> y1;
+     cin >> x2 >> y2;
+     
+	  float slope = (y2-y1)/(x2-x1);
+	    
+    if (slope>=0 && slope<1 )  
+	straightline(x1,y1,x2,y2,slope);
+	else if (slope >= 1)
+    straightline(y1,x1,y2,x2,slope);
+    else if (slope <= -1 )
+    straightline(x1,y1,x2,y2,slope);
+    else if (slope >= -1)
+    straightline(-y1,-x1,-y2,-x1,slope);
+	 
+ }
+     
