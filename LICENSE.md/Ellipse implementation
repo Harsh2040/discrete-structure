@@ -1,0 +1,187 @@
+#include<iostream>
+#include <map>
+#include <list>
+using namespace std;
+
+
+
+map<int,list<int> > mymap;
+map<int,list<int> >::iterator it;
+
+
+void putpixel (int m,int n,map<int,list<int> >&mymap)
+{
+	
+ 	map<int,list<int> >::iterator it;
+ 	if(mymap.find(m)!=mymap.end())
+ 	{
+	 
+ 	it=mymap.find(m);
+ 	list<int> temp=it->second;
+ 	list<int>::iterator p;
+ 	for(p=temp.begin();p!=temp.end();p++)
+ 	{
+ 		if( *p == n)
+ 		return;
+ 	
+	 }
+	 mymap[m].push_back(n);
+}
+else
+mymap[m].push_back(n);
+ 	return;
+ 	
+}
+
+void showallpoints(map<int,list<int> >&mymap)
+{
+	for( it=mymap.begin();it!=mymap.end();it++)
+	{
+		list<int>temp=it->second;
+		for(list<int>::iterator p=temp.begin();p!=temp.end();p++)
+		{
+			cout<<"("<<it->first<<","<<*p<<")"<<endl;
+			
+		}
+	}
+}
+
+
+
+
+void plot4ellipsepoints (int a , int b, int centerx,int centery)
+{
+	putpixel(centerx+a,centery+b,mymap);
+	putpixel(centerx-a,centery+b,mymap);
+	putpixel(centerx+a,centery-b,mymap);
+	putpixel(centerx-a,centery-b,mymap);
+}
+void ellipse (int cx,int cy,float p ,float q)
+{
+	int xAxis = p;
+	int yAxis  =q;
+	int x = p;
+	int y =0;
+	int Stoppingx = 2*(p*p)*x;
+	int Stoppingy = 2*(q*q)*y;
+	
+	while (Stoppingx >= Stoppingy)
+	{
+		plot4ellipsepoints(x,y,cx,cy);
+		y = y+1;
+		int Xchange = (p*p)*(1-2*x);
+	    int Ychange = (q*q)*(2*y+1);
+	    long int ellipse_error = (q*q)*(x*x)+(p*p)*(y*y)-(p*p)*(q*q);
+		
+		Stoppingy = 2*(q*q)*y;
+		if (2*(ellipse_error)+Xchange>0)
+		{
+			x = x-1;
+			Stoppingx = 2*(p*p)*x;
+			ellipse_error = (q*q)*(x*x)+(p*p)*(y*y)-(p*p)*(q*q);
+			Xchange = (p*p)*(1-2*x);
+		}
+	}
+	
+	 x =0;
+	 y = q;
+	 Stoppingx = 2*(p*p)*x;
+	 Stoppingy = 2*(q*q)*y;
+	while (Stoppingy >= Stoppingx )
+	{
+		plot4ellipsepoints(x,y,cx,cy);
+		x = x+1;
+		int Xchange = (p*p)*(1-2*x);
+		int Ychange = (q*q)*(2*y+1);
+		long int ellipse_error = (q*q)*(x*x)+(p*p)*(y*y)-(p*p)*(q*q);
+		
+		Stoppingx = 2*(p*p)*x;
+		if (2*(ellipse_error)+Xchange>0)
+		{
+			y =y -1;
+			Stoppingy = (2)*(q*q)*y;
+			ellipse_error = (q*q)*(x*x)+(p*p)*(y*y)-(p*p)*(q*q);
+			Ychange =  (q*q)*(2*y+1);
+		}
+	}
+}
+
+void neighbours ( map<int,list<int> > &mymap ,int given_x, int given_y, float p,float q)
+{
+	float Stopping_x = 2*(q*q)*given_x;
+	float Stopping_y = 2*(p*p)*given_y;
+	
+	if (Stopping_x < Stopping_y)
+	{
+			for (it = mymap.begin();it != mymap.end();++it)
+	{
+		if (it->first == given_x+1||it->first == given_x-1)
+		{
+			list<int> temp1 = it->second;
+			list<int> :: iterator itr1;
+			for(itr1 = temp1.begin();itr1 != temp1.end();++itr1)
+			{
+				if (given_y >0 && *itr1 >=0 )
+				cout <<"("<< it->first << ","<<*itr1 <<")"<< endl;
+				else if (given_y <0 && *itr1 <=0)
+				cout <<"("<< it->first << ","<<*itr1 <<")"<< endl;
+				else
+				continue;	
+				
+			}
+			
+		}
+	
+}
+		
+	}
+	else if (Stopping_x>Stopping_y)
+	{
+	
+			for (it = mymap.begin();it != mymap.end();++it)
+	{
+		if (it->first == given_x+1||it->first == given_x-1|| it->first == given_x)
+		{
+			
+			
+			list<int> temp1 = it->second;
+			list<int> :: iterator itr1;
+			for(itr1 = temp1.begin();itr1 != temp1.end();++itr1)
+			{
+			
+				
+				if ((given_y >0) && (*itr1 >=0) && (*itr1 == given_y+1||*itr1 == given_y-1) )
+				cout <<"("<< it->first << ","<<*itr1 <<")"<< endl;
+				else if (given_y <0 && *itr1 <=0&&(*itr1 == given_y+1||*itr1 == given_y-1))
+				cout <<"("<< it->first << ","<<*itr1 <<")"<< endl;
+				else
+				continue;
+				}
+				
+				
+			}
+			
+		}
+	}
+	
+
+	
+}
+
+	
+
+int main()
+{
+	int Center_x,Center_y;
+	float Mx,My;
+	cin >> Center_x >> Center_y;
+	cin >> Mx >> My;
+	
+	ellipse (Center_x,Center_y,Mx,My);
+	showallpoints(mymap);
+	cout << " Enter the point for determining neighbours :" << endl;
+	int x,y;
+	cin >> x >> y;
+	cout << " The Neighbours of given point are as follows : " << endl;
+	neighbours(mymap,x,y,Mx,My);
+}
